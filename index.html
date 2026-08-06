@@ -425,7 +425,7 @@ const ART = {
 };
 
 /* colored blob for COLORS, big number for NUMBERS */
-function colorArt(hex){ return S(`<path d="M60 20 C88 20 100 44 96 66 C92 92 66 100 48 96 C24 90 18 66 24 46 C30 26 44 20 60 20Z" fill="${hex}"/>`, "#ffffff"); }
+function colorArt(hex){ return S(`<path d="M60 20 C88 20 100 44 96 66 C92 92 66 100 48 96 C24 90 18 66 24 46 C30 26 44 20 60 20Z" fill="${hex}" stroke="rgba(0,0,0,0.13)" stroke-width="2"/>`, "#ffffff"); }
 function numArt(n){
   // 11+ : just a big clean numeral (counting that many dots is cluttered)
   if(n>10){
@@ -519,6 +519,36 @@ const ACT={
 /* =====================================================================
    WORD DECKS  [artKey, English, Portuguese]   (ABC: [key, Letter, kwEN, kwPT])
    ===================================================================== */
+/* ---- extra vocabulary art so each section plays longer ---- */
+Object.assign(ART, {
+  cow: S(`<g stroke-linejoin="round"><path d="M32 44 L24 30 L42 40Z" fill="#3a3a3a"/><path d="M88 44 L96 30 L78 40Z" fill="#3a3a3a"/><path d="M36 42 l-10 -8 M84 42 l10 -8" stroke="#d9b98a" stroke-width="7" stroke-linecap="round"/><circle cx="60" cy="60" r="31" fill="#fff"/><path d="M40 44 q-7 8 3 13 q7 -6 -3 -13z" fill="#3a3a3a"/><path d="M82 74 q9 4 3 12 q-8 0 -3 -12z" fill="#3a3a3a"/><ellipse cx="60" cy="76" rx="18" ry="12" fill="#ffc9d9"/><circle cx="53" cy="77" r="2.4" fill="#a05a72"/><circle cx="67" cy="77" r="2.4" fill="#a05a72"/><circle cx="50" cy="56" r="3.2" fill="#2a2a2a"/><circle cx="70" cy="56" r="3.2" fill="#2a2a2a"/></g>`, "#eef7ea"),
+  elephant: S(`<g stroke-linejoin="round"><ellipse cx="30" cy="56" rx="15" ry="19" fill="#9aa6b4"/><ellipse cx="90" cy="56" rx="15" ry="19" fill="#9aa6b4"/><ellipse cx="30" cy="56" rx="8" ry="11" fill="#b7c0cc"/><ellipse cx="90" cy="56" rx="8" ry="11" fill="#b7c0cc"/><ellipse cx="60" cy="62" rx="28" ry="26" fill="#9aa6b4"/><path d="M60 72 Q57 98 76 96 Q82 96 79 88" fill="none" stroke="#9aa6b4" stroke-width="12" stroke-linecap="round"/><circle cx="50" cy="56" r="3.2" fill="#2a2a2a"/><circle cx="70" cy="56" r="3.2" fill="#2a2a2a"/></g>`, "#eef1f6"),
+  monkey: S(`<g stroke-linejoin="round"><circle cx="36" cy="46" r="12" fill="#8a5a34"/><circle cx="84" cy="46" r="12" fill="#8a5a34"/><circle cx="36" cy="46" r="7" fill="#e6b98a"/><circle cx="84" cy="46" r="7" fill="#e6b98a"/><circle cx="60" cy="60" r="30" fill="#8a5a34"/><ellipse cx="60" cy="66" rx="22" ry="20" fill="#e6b98a"/><circle cx="52" cy="58" r="3.2" fill="#2a1a0c"/><circle cx="68" cy="58" r="3.2" fill="#2a1a0c"/><ellipse cx="60" cy="72" rx="8" ry="5" fill="#c98a54"/><circle cx="56" cy="72" r="1.4" fill="#2a1a0c"/><circle cx="64" cy="72" r="1.4" fill="#2a1a0c"/></g>`, "#f6ead9"),
+  duck: S(`<g stroke-linejoin="round"><ellipse cx="64" cy="74" rx="28" ry="20" fill="#ffd23f"/><circle cx="52" cy="52" r="18" fill="#ffd23f"/><path d="M68 50 L92 55 L68 61 Z" fill="#ff9f2e"/><circle cx="54" cy="48" r="3" fill="#2a2a2a"/><path d="M40 88 q-10 4 -18 -2" stroke="#ff9f2e" stroke-width="6" stroke-linecap="round" fill="none"/></g>`, "#eaf6ff"),
+  penguin: S(`<g stroke-linejoin="round"><ellipse cx="60" cy="62" rx="26" ry="32" fill="#2a2a3a"/><ellipse cx="60" cy="68" rx="16" ry="24" fill="#fff"/><circle cx="52" cy="46" r="6" fill="#fff"/><circle cx="68" cy="46" r="6" fill="#fff"/><circle cx="52" cy="46" r="2.6" fill="#2a2a3a"/><circle cx="68" cy="46" r="2.6" fill="#2a2a3a"/><path d="M55 52 L65 52 L60 60 Z" fill="#ff9f2e"/><path d="M50 94 l-10 4 M70 94 l10 4" stroke="#ff9f2e" stroke-width="6" stroke-linecap="round"/></g>`, "#eef4fb"),
+  owl: S(`<g stroke-linejoin="round"><path d="M38 34 L48 48 L34 46Z" fill="#8a5a34"/><path d="M82 34 L72 48 L86 46Z" fill="#8a5a34"/><ellipse cx="60" cy="64" rx="30" ry="32" fill="#a9713f"/><circle cx="50" cy="56" r="12" fill="#fff"/><circle cx="70" cy="56" r="12" fill="#fff"/><circle cx="50" cy="56" r="6" fill="#2a1a0c"/><circle cx="70" cy="56" r="6" fill="#2a1a0c"/><path d="M56 66 L64 66 L60 74 Z" fill="#ff9f2e"/><path d="M40 84 q20 12 40 0" stroke="#8a5a34" stroke-width="3" fill="none"/></g>`, "#f6efe4"),
+  snake: S(`<g fill="none" stroke="#5cc46a" stroke-width="12" stroke-linecap="round"><path d="M28 90 q20 -18 40 -2 q22 -18 20 -34 q-2 -14 -18 -12"/></g><circle cx="72" cy="42" r="9" fill="#5cc46a"/><circle cx="70" cy="40" r="2" fill="#2a2a2a"/><path d="M80 42 l8 -3 m-8 7 l8 3" stroke="#ff5d6c" stroke-width="2.4" stroke-linecap="round"/>`, "#eaf7ea"),
+  bear: S(`<g stroke-linejoin="round"><circle cx="40" cy="38" r="12" fill="#8a5a34"/><circle cx="80" cy="38" r="12" fill="#8a5a34"/><circle cx="40" cy="38" r="6" fill="#6e4526"/><circle cx="80" cy="38" r="6" fill="#6e4526"/><circle cx="60" cy="62" r="30" fill="#8a5a34"/><ellipse cx="60" cy="70" rx="16" ry="13" fill="#c9a06a"/><ellipse cx="60" cy="66" rx="4" ry="3" fill="#2a1a0c"/><circle cx="51" cy="56" r="3.2" fill="#2a1a0c"/><circle cx="69" cy="56" r="3.2" fill="#2a1a0c"/></g>`, "#f2e6d6"),
+  cheese: S(`<g stroke-linejoin="round"><path d="M22 82 L96 52 L96 82 Z" fill="#ffd23f" stroke="#e8b000" stroke-width="2"/><path d="M22 82 L96 52 L60 50 L28 66Z" fill="#ffe07a"/><circle cx="70" cy="72" r="4" fill="#fff3c4"/><circle cx="84" cy="66" r="3" fill="#fff3c4"/><circle cx="58" cy="74" r="3" fill="#fff3c4"/></g>`, "#fff7e0"),
+  grapes: S(`<g fill="#8a6bff"><circle cx="60" cy="52" r="9"/><circle cx="47" cy="62" r="9"/><circle cx="73" cy="62" r="9"/><circle cx="54" cy="74" r="9"/><circle cx="66" cy="74" r="9"/><circle cx="60" cy="86" r="9"/></g><path d="M60 44 q6 -10 15 -10" stroke="#7a4a22" stroke-width="3" fill="none"/><path d="M63 40 q9 -5 12 1 q-9 3 -12 -1z" fill="#5cc46a"/>`, "#f3ecff"),
+  carrot: S(`<g><path d="M50 44 L70 44 L60 100 Z" fill="#ff9f2e"/><path d="M55 62 h10 M53 76 h14" stroke="#e8830a" stroke-width="2"/><path d="M60 44 l-11 -14 M60 44 l0 -18 M60 44 l11 -14" stroke="#4caf50" stroke-width="6" stroke-linecap="round"/></g>`, "#fff0e0"),
+  car: S(`<g stroke-linejoin="round"><path d="M16 74 L28 54 L84 54 L100 74 Z" fill="#ff5d6c"/><path d="M37 54 L45 40 L72 40 L82 54Z" fill="#bfe6ff"/><rect x="14" y="70" width="90" height="12" rx="4" fill="#e04452"/><circle cx="36" cy="84" r="9" fill="#2a2a3a"/><circle cx="82" cy="84" r="9" fill="#2a2a3a"/></g>`, "#eef2f7"),
+  bus: S(`<g stroke-linejoin="round"><rect x="14" y="40" width="92" height="46" rx="8" fill="#ffce3f"/><rect x="20" y="48" width="15" height="14" rx="2" fill="#bfe6ff"/><rect x="41" y="48" width="15" height="14" rx="2" fill="#bfe6ff"/><rect x="62" y="48" width="15" height="14" rx="2" fill="#bfe6ff"/><rect x="86" y="48" width="14" height="14" rx="2" fill="#bfe6ff"/><circle cx="36" cy="90" r="9" fill="#2a2a3a"/><circle cx="84" cy="90" r="9" fill="#2a2a3a"/></g>`, "#fff7d6"),
+  boat: S(`<g stroke-linejoin="round"><path d="M20 70 L100 70 L86 90 L34 90 Z" fill="#ff5d6c"/><rect x="58" y="30" width="5" height="40" fill="#8a5a34"/><path d="M63 32 L92 62 L63 62 Z" fill="#fff"/><path d="M4 92 q18 -8 36 0 t36 0" stroke="#4fc3f7" stroke-width="4" fill="none"/></g>`, "#eaf6ff"),
+  train: S(`<g stroke-linejoin="round"><rect x="22" y="44" width="60" height="42" rx="6" fill="#ff5d6c"/><rect x="82" y="60" width="16" height="26" rx="2" fill="#e04452"/><rect x="32" y="52" width="26" height="18" rx="3" fill="#bfe6ff"/><rect x="40" y="30" width="12" height="16" fill="#8a94a6"/><circle cx="40" cy="92" r="7" fill="#2a2a3a"/><circle cx="68" cy="92" r="7" fill="#2a2a3a"/><circle cx="90" cy="92" r="7" fill="#2a2a3a"/></g>`, "#fff0f0"),
+  bike: S(`<g fill="none" stroke="#4a68c0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="36" cy="74" r="18"/><circle cx="84" cy="74" r="18"/><path d="M36 74 L56 48 L74 74 M56 48 L64 74 M56 48 L68 46"/></g>`, "#eef2fb"),
+  truck: S(`<g stroke-linejoin="round"><rect x="14" y="44" width="52" height="42" rx="4" fill="#ffce3f"/><path d="M66 56 L88 56 L100 72 L100 86 L66 86Z" fill="#ff9f2e"/><rect x="74" y="60" width="18" height="12" rx="2" fill="#bfe6ff"/><circle cx="36" cy="90" r="9" fill="#2a2a3a"/><circle cx="86" cy="90" r="9" fill="#2a2a3a"/></g>`, "#fff7d6"),
+  rocket: S(`<g stroke-linejoin="round"><path d="M60 16 Q78 40 78 70 L42 70 Q42 40 60 16Z" fill="#eef2f7" stroke="#c3d0e0" stroke-width="2"/><circle cx="60" cy="46" r="8" fill="#4fc3f7"/><path d="M42 62 L28 78 L42 74Z" fill="#ff5d6c"/><path d="M78 62 L92 78 L78 74Z" fill="#ff5d6c"/><path d="M50 70 h20 L60 98Z" fill="#ff9f2e"/></g>`, "#eef2f7"),
+  rain: S(`<g><path d="M40 58 A16 16 0 0 1 45 30 A20 20 0 0 1 82 34 A14 14 0 0 1 84 60 Z" fill="#c3d0e0"/><g stroke="#4fc3f7" stroke-width="5" stroke-linecap="round"><path d="M45 68 l-4 14 M60 70 l-4 14 M75 68 l-4 14"/></g></g>`, "#eaf3fb"),
+  snow: S(`<g stroke="#7ec8f7" stroke-width="4" stroke-linecap="round"><path d="M60 24 V96 M30 42 L90 78 M90 42 L30 78"/><g stroke-width="3"><path d="M60 24 l-7 9 M60 24 l7 9 M60 96 l-7 -9 M60 96 l7 -9 M30 42 l1 11 M90 78 l-1 -11 M90 42 l-1 11 M30 78 l1 -11"/></g></g>`, "#eaf6ff"),
+  mountain: S(`<g stroke-linejoin="round"><path d="M12 92 L46 38 L66 70 L80 50 L108 92 Z" fill="#8a94a6"/><path d="M46 38 L37 54 L55 54Z" fill="#fff"/><path d="M80 50 L73 62 L88 62Z" fill="#fff"/></g>`, "#eef1f6"),
+});
+Object.assign(ACT, {
+  a_walk: S(`<circle cx="60" cy="30" r="11" fill="#f2c79a"/><path d="M60 40 L60 66" stroke="#ff7ac6" stroke-width="11" stroke-linecap="round"/><path d="M60 48 L48 58 M60 48 L72 58" stroke="#f2c79a" stroke-width="6" stroke-linecap="round"/><g><path d="M60 66 L52 88" stroke="#4a68c0" stroke-width="8" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="12 60 66;-12 60 66;12 60 66" dur="0.7s" repeatCount="indefinite"/></g><g><path d="M60 66 L68 88" stroke="#3a55a0" stroke-width="8" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="-12 60 66;12 60 66;-12 60 66" dur="0.7s" repeatCount="indefinite"/></g>`, "#eaf6ff"),
+  a_drink: S(`<circle cx="54" cy="32" r="11" fill="#f2c79a"/><path d="M54 42 L54 70" stroke="#ff7ac6" stroke-width="11" stroke-linecap="round"/><path d="M54 70 L46 90 M54 70 L62 90" stroke="#4a68c0" stroke-width="8" stroke-linecap="round"/><g><path d="M54 50 L70 44" stroke="#f2c79a" stroke-width="6" stroke-linecap="round"/><rect x="66" y="35" width="12" height="13" rx="2" fill="#ff5d6c"/><animateTransform attributeName="transform" type="rotate" values="0 54 50;-32 54 50;0 54 50" dur="1.5s" repeatCount="indefinite"/></g>`, "#fff4e0"),
+  a_clap: S(`<circle cx="60" cy="30" r="11" fill="#f2c79a"/><path d="M60 40 L60 68" stroke="#ff7ac6" stroke-width="11" stroke-linecap="round"/><path d="M60 66 L52 88 M60 66 L68 88" stroke="#4a68c0" stroke-width="8" stroke-linecap="round"/><g><path d="M60 50 L44 54" stroke="#f2c79a" stroke-width="6" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="0 60 50;24 60 50;0 60 50" dur="0.4s" repeatCount="indefinite"/></g><g><path d="M60 50 L76 54" stroke="#f2c79a" stroke-width="6" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="0 60 50;-24 60 50;0 60 50" dur="0.4s" repeatCount="indefinite"/></g>`, "#ffeaf5"),
+});
+
 const DECKS = {
   favorites:{ name:"⭐ Favoritos", words:[
     ["unicorn","Unicorn","Unicórnio"],["horse","Horse","Cavalo"],["capybara","Capybara","Capivara"],
@@ -527,17 +557,36 @@ const DECKS = {
   animals:{ name:"🐶 Animais", words:[
     ["dog","Dog","Cachorro"],["cat","Cat","Gato"],["rabbit","Rabbit","Coelho"],["bird","Bird","Pássaro"],
     ["fish","Fish","Peixe"],["lion","Lion","Leão"],["frog","Frog","Sapo"],["butterfly","Butterfly","Borboleta"],
+    ["horse","Horse","Cavalo"],["cow","Cow","Vaca"],["pig","Pig","Porco"],["elephant","Elephant","Elefante"],
+    ["monkey","Monkey","Macaco"],["duck","Duck","Pato"],["penguin","Penguin","Pinguim"],["owl","Owl","Coruja"],
+    ["snake","Snake","Cobra"],["bear","Bear","Urso"],["zebra","Zebra","Zebra"],["capybara","Capybara","Capivara"],
   ]},
   food:{ name:"🍎 Comida", words:[
-    ["apple","Apple","Maçã"],["banana","Banana","Banana"],["strawberry","Strawberry","Morango"],
-    ["cookie","Cookie","Biscoito"],["milk","Milk","Leite"],["water","Water","Água"],
+    ["apple","Apple","Maçã"],["banana","Banana","Banana"],["strawberry","Strawberry","Morango"],["orange","Orange","Laranja"],
+    ["grapes","Grapes","Uvas"],["carrot","Carrot","Cenoura"],["bread","Bread","Pão"],["cheese","Cheese","Queijo"],
+    ["egg","Egg","Ovo"],["milk","Milk","Leite"],["water","Water","Água"],["juice","Juice","Suco"],
+    ["cookie","Cookie","Biscoito"],["cake","Cake","Bolo"],["pizza","Pizza","Pizza"],["icecream","Ice cream","Sorvete"],["popcorn","Popcorn","Pipoca"],
+  ]},
+  transporte:{ name:"🚗 Transporte", words:[
+    ["car","Car","Carro"],["bus","Bus","Ônibus"],["truck","Truck","Caminhão"],["bike","Bike","Bicicleta"],
+    ["train","Train","Trem"],["boat","Boat","Barco"],["airplane","Airplane","Avião"],["van","Van","Van"],["rocket","Rocket","Foguete"],
+  ]},
+  casa:{ name:"🏠 Casa", words:[
+    ["bed","Bed","Cama"],["table","Table","Mesa"],["chair","Chair","Cadeira"],["sofa","Sofa","Sofá"],
+    ["tv","TV","Televisão"],["lamp","Lamp","Luminária"],["clock","Clock","Relógio"],["book","Book","Livro"],
+    ["window","Window","Janela"],["fridge","Fridge","Geladeira"],["cup","Cup","Copo"],["plate","Plate","Prato"],
+    ["mirror","Mirror","Espelho"],["plant","Plant","Planta"],
   ]},
   world:{ name:"☀️ Mundo", words:[
-    ["sun","Sun","Sol"],["moon","Moon","Lua"],["cloud","Cloud","Nuvem"],["flower","Flower","Flor"],["tree","Tree","Árvore"],
+    ["sun","Sun","Sol"],["moon","Moon","Lua"],["star","Star","Estrela"],["cloud","Cloud","Nuvem"],["rainbow","Rainbow","Arco-íris"],
+    ["rain","Rain","Chuva"],["snow","Snow","Neve"],["flower","Flower","Flor"],["tree","Tree","Árvore"],["mountain","Mountain","Montanha"],
+    ["heart","Heart","Coração"],["butterfly","Butterfly","Borboleta"],
   ]},
   colors:{ name:"🌈 Cores", words:[
     ["c_red","Red","Vermelho","#ff4d5e"],["c_blue","Blue","Azul","#3a7bd5"],["c_green","Green","Verde","#3fbf5f"],
-    ["c_yellow","Yellow","Amarelo","#ffd23f"],["c_pink","Pink","Rosa","#ff7ac6"],["c_purple","Purple","Roxo","#8a6bff"],["c_orange","Orange","Laranja","#ff9f43"],
+    ["c_yellow","Yellow","Amarelo","#ffd23f"],["c_pink","Pink","Rosa","#ff7ac6"],["c_purple","Purple","Roxo","#8a6bff"],
+    ["c_orange","Orange","Laranja","#ff9f43"],["c_brown","Brown","Marrom","#9c6b3f"],["c_gray","Gray","Cinza","#9aa3b0"],
+    ["c_white","White","Branco","#ffffff"],["c_black","Black","Preto","#2f2f3a"],
   ]},
   numbers:{ name:"🔢 Números", words:[
     ["n1","One","Um"],["n2","Two","Dois"],["n3","Three","Três"],["n4","Four","Quatro"],["n5","Five","Cinco"],
@@ -552,8 +601,9 @@ const DECKS = {
     ["family","Family","Família"],["baby","Baby","Bebê"],["eyes","Eyes","Olhos"],["hand","Hand","Mão"],
   ]},
   actions:{ name:"🏃 Ações", words:[
-    ["a_run","Run","Correr"],["a_jump","Jump","Pular"],["a_swim","Swim","Nadar"],
-    ["a_eat","Eat","Comer"],["a_sleep","Sleep","Dormir"],["a_dance","Dance","Dançar"],
+    ["a_run","Run","Correr"],["a_walk","Walk","Andar"],["a_jump","Jump","Pular"],["a_swim","Swim","Nadar"],
+    ["a_dance","Dance","Dançar"],["a_clap","Clap","Bater palmas"],["a_eat","Eat","Comer"],["a_drink","Drink","Beber"],
+    ["a_sleep","Sleep","Dormir"],
   ]},
   abc:{ name:"🔤 ABC", words:[
     ["L_a","A","Apple","Maçã","apple"],["L_b","B","Ball","Bola","ball"],["L_c","C","Cat","Gato","cat"],["L_d","D","Dog","Cachorro","dog"],
@@ -574,7 +624,10 @@ function artFor(w){
   if(k.startsWith("a_")) return ACT[k] || "";
   if(k.startsWith("L_")) return letterArt(w);
   if(PHOTOKEY[k] && PHOTOS[PHOTOKEY[k]]) return photoSVG(PHOTOS[PHOTOKEY[k]], k==="family"?"rect":"circle");
-  return ART[k] || S(`<text x="60" y="70" font-size="30" text-anchor="middle">?</text>`,"#eee");
+  if(ART[k]) return ART[k];
+  if(typeof ABCPIC!=="undefined" && ABCPIC[k]) return ABCPIC[k];
+  if(typeof OBJ!=="undefined" && OBJ[k]) return S(OBJ[k], "#eef0f6");
+  return S(`<text x="60" y="70" font-size="30" text-anchor="middle">?</text>`,"#eee");
 }
 
 /* =====================================================================
