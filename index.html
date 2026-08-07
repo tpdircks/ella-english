@@ -549,6 +549,62 @@ Object.assign(ACT, {
   a_clap: S(`<circle cx="60" cy="30" r="11" fill="#f2c79a"/><path d="M60 40 L60 68" stroke="#ff7ac6" stroke-width="11" stroke-linecap="round"/><path d="M60 66 L52 88 M60 66 L68 88" stroke="#4a68c0" stroke-width="8" stroke-linecap="round"/><g><path d="M60 50 L44 54" stroke="#f2c79a" stroke-width="6" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="0 60 50;24 60 50;0 60 50" dur="0.4s" repeatCount="indefinite"/></g><g><path d="M60 50 L76 54" stroke="#f2c79a" stroke-width="6" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="0 60 50;-24 60 50;0 60 50" dur="0.4s" repeatCount="indefinite"/></g>`, "#ffeaf5"),
 });
 
+/* ---- family-relationship figures (color-varied people) ---- */
+function pFig(cx, sex, age, hair, cloth){
+  var skin="#f2c79a", s="";
+  var hr = age==="baby"?15:19, hy = age==="baby"?50:44;
+  s+='<path d="M'+(cx-30)+' 106 Q'+(cx-30)+' 74 '+cx+' 74 Q'+(cx+30)+' 74 '+(cx+30)+' 106 Z" fill="'+cloth+'"/>';
+  if(sex==="f" && age!=="baby" && age!=="child"){
+    s+='<path d="M'+(cx-23)+' '+(hy+22)+' Q'+(cx-26)+' '+(hy-22)+' '+cx+' '+(hy-24)+' Q'+(cx+26)+' '+(hy-22)+' '+(cx+23)+' '+(hy+22)+' L'+(cx+17)+' '+(hy+24)+' Q'+cx+' '+(hy+6)+' '+(cx-17)+' '+(hy+24)+' Z" fill="'+hair+'"/>';
+  }
+  s+='<circle cx="'+cx+'" cy="'+hy+'" r="'+hr+'" fill="'+skin+'"/>';
+  if(age==="baby"){
+    s+='<path d="M'+(cx-13)+' '+(hy-4)+' Q'+cx+' '+(hy-19)+' '+(cx+13)+' '+(hy-4)+'" fill="none" stroke="'+hair+'" stroke-width="6" stroke-linecap="round"/>';
+  } else {
+    s+='<path d="M'+(cx-20)+' '+(hy-3)+' Q'+(cx-20)+' '+(hy-24)+' '+cx+' '+(hy-24)+' Q'+(cx+20)+' '+(hy-24)+' '+(cx+20)+' '+(hy-3)+' Q'+(cx+9)+' '+(hy-13)+' '+cx+' '+(hy-12)+' Q'+(cx-9)+' '+(hy-13)+' '+(cx-20)+' '+(hy-3)+' Z" fill="'+hair+'"/>';
+  }
+  s+='<circle cx="'+(cx-7)+'" cy="'+(hy+2)+'" r="2.6" fill="#2a1a0c"/><circle cx="'+(cx+7)+'" cy="'+(hy+2)+'" r="2.6" fill="#2a1a0c"/>';
+  s+='<path d="M'+(cx-6)+' '+(hy+10)+' Q'+cx+' '+(hy+14)+' '+(cx+6)+' '+(hy+10)+'" stroke="#c0392b" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+  if(age==="old"){ s+='<g fill="none" stroke="#6a6a7a" stroke-width="2"><circle cx="'+(cx-7)+'" cy="'+(hy+2)+'" r="6"/><circle cx="'+(cx+7)+'" cy="'+(hy+2)+'" r="6"/><path d="M'+(cx-1)+' '+(hy+2)+' h2"/></g>'; }
+  if(sex==="f" && age==="child"){ s+='<circle cx="'+(cx-15)+'" cy="'+(hy-13)+'" r="5" fill="#ff7ac6"/>'; }
+  if(age==="baby"){ s+='<circle cx="'+(cx-9)+'" cy="'+(hy+8)+'" r="3.2" fill="#ffb0b0"/><circle cx="'+(cx+9)+'" cy="'+(hy+8)+'" r="3.2" fill="#ffb0b0"/>'; }
+  return s;
+}
+function personArt(sex, age, hair, cloth, bg){ return S(pFig(60, sex, age, hair, cloth), bg); }
+function coupleArt(A, B, bg){ return S('<g transform="translate(-17,16) scale(0.66)">'+pFig(60,A[0],A[1],A[2],A[3])+'</g><g transform="translate(43,16) scale(0.66)">'+pFig(60,B[0],B[1],B[2],B[3])+'</g>', bg); }
+var BR="#7a4a22", DK="#3a2a1a", GR="#c2c2cc";
+Object.assign(ART, {
+  r_mother: personArt("f","adult",BR,"#ff8fb0","#ffe9d6"),
+  r_father: personArt("m","adult",DK,"#6aa0e0","#eef2fb"),
+  r_parents: coupleArt(["f","adult",BR,"#ff8fb0"],["m","adult",DK,"#6aa0e0"],"#fff0f4"),
+  r_sister: personArt("f","child",BR,"#b39ddb","#f3ecff"),
+  r_brother: personArt("m","child",BR,"#7ecb8f","#eafaef"),
+  r_baby: personArt("f","baby","#8a5a34","#8fd0f5","#eaf6ff"),
+  r_daughter: personArt("f","child",BR,"#ff9f8f","#ffeee9"),
+  r_son: personArt("m","child",BR,"#4fc3bf","#e6faf8"),
+  r_wife: personArt("f","adult",BR,"#ff5da2","#ffe9f2"),
+  r_husband: personArt("m","adult",DK,"#3a4a8a","#eaedf7"),
+  r_grandmother: personArt("f","old",GR,"#c9b8ff","#f0ecff"),
+  r_grandfather: personArt("m","old",GR,"#d0b48a","#f6efe2"),
+  r_grandparents: coupleArt(["f","old",GR,"#c9b8ff"],["m","old",GR,"#d0b48a"],"#f2eeff"),
+  r_granddaughter: personArt("f","child",BR,"#ffd23f","#fff8de"),
+  r_grandson: personArt("m","child",BR,"#ff9f43","#fff0df"),
+  r_aunt: personArt("f","adult",BR,"#5cc46a","#e9f8ec"),
+  r_uncle: personArt("m","adult",DK,"#9c6b3f","#f5ece1"),
+  r_cousinf: personArt("f","child",BR,"#ff7ac6","#ffe9f6"),
+  r_cousinm: personArt("m","child",BR,"#4fc3f7","#e6f6fe"),
+  r_niece: personArt("f","child",BR,"#7ee0c0","#e6faf4"),
+  r_nephew: personArt("m","child",BR,"#ff5d6c","#ffe9eb"),
+  r_godmother: personArt("f","adult",BR,"#8a6bff","#efeaff"),
+  r_godfather: personArt("m","adult",DK,"#8a94a6","#eef0f4"),
+  r_mil: personArt("f","adult","#9a8a8a","#d98fb0","#fbecf2"),
+  r_fil: personArt("m","adult","#8a7a6a","#7a8a6a","#eef2e8"),
+  r_dil: personArt("f","adult",BR,"#ffb0cf","#fff0f6"),
+  r_sil: personArt("m","adult",DK,"#6ab0c0","#e9f5f8"),
+  r_siL: personArt("f","adult",BR,"#c0a0e0","#f5eefb"),
+  r_bil: personArt("m","adult",DK,"#a0b060","#f2f5e6"),
+});
+
 const DECKS = {
   favorites:{ name:"⭐ Favoritos", words:[
     ["unicorn","Unicorn","Unicórnio"],["horse","Horse","Cavalo"],["capybara","Capybara","Capivara"],
@@ -599,6 +655,20 @@ const DECKS = {
     ["girl","Me","Eu"],["mom","Mom","Mamãe"],["dad","Dad","Papai"],
     ["sister","Sister","Irmã"],["brother","Brother","Irmão"],["grandma","Grandma","Vovó"],
     ["family","Family","Família"],["baby","Baby","Bebê"],["eyes","Eyes","Olhos"],["hand","Hand","Mão"],
+  ]},
+  relatives:{ name:"👪 Parentes", words:[
+    ["r_mother","Mother","Mãe"],["r_father","Father","Pai"],["r_parents","Parents","Pais"],
+    ["r_sister","Sister","Irmã"],["r_brother","Brother","Irmão"],["r_baby","Baby","Bebê"],
+    ["r_daughter","Daughter","Filha"],["r_son","Son","Filho"],
+    ["r_wife","Wife","Esposa"],["r_husband","Husband","Marido"],
+    ["r_grandmother","Grandmother","Avó"],["r_grandfather","Grandfather","Avô"],["r_grandparents","Grandparents","Avós"],
+    ["r_granddaughter","Granddaughter","Neta"],["r_grandson","Grandson","Neto"],
+    ["r_aunt","Aunt","Tia"],["r_uncle","Uncle","Tio"],
+    ["r_cousinf","Cousin (girl)","Prima"],["r_cousinm","Cousin (boy)","Primo"],
+    ["r_niece","Niece","Sobrinha"],["r_nephew","Nephew","Sobrinho"],
+    ["r_mil","Mother-in-law","Sogra"],["r_fil","Father-in-law","Sogro"],
+    ["r_dil","Daughter-in-law","Nora"],["r_sil","Son-in-law","Genro"],
+    ["r_siL","Sister-in-law","Cunhada"],["r_bil","Brother-in-law","Cunhado"],
   ]},
   actions:{ name:"🏃 Ações", words:[
     ["a_run","Run","Correr"],["a_walk","Walk","Andar"],["a_jump","Jump","Pular"],["a_swim","Swim","Nadar"],
