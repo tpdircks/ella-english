@@ -128,6 +128,22 @@
   .test{background:#eae5ff; color:#5b4bb0; border:none; border-radius:12px; padding:10px 14px; font-weight:800; cursor:pointer; font-family:inherit;}
   .closeit{margin-top:20px; width:100%; background:var(--accent); color:#fff; border:none; border-radius:16px; padding:14px; font-weight:800; font-size:17px; cursor:pointer; font-family:inherit;}
   .speed{width:100%;}
+  #lock{position:fixed; inset:0; z-index:100; background:linear-gradient(150deg,#5a4bb0,#7c5cff); display:none; align-items:center; justify-content:center; padding:20px;}
+  .lockcard{background:#fff; border-radius:28px; padding:24px; width:min(360px,92vw); text-align:center; box-shadow:0 20px 50px rgba(0,0,0,.4);}
+  .lockcard.shake{animation:shake .4s;}
+  .lockemoji{font-size:44px;}
+  #lockTitle{font-weight:800; font-size:22px; color:var(--ink); margin-top:4px;}
+  #lockSub{color:#8a80b0; font-size:14px; margin:4px 0 12px;}
+  #lockDots{font-size:30px; letter-spacing:8px; color:#7c5cff; margin-bottom:14px;}
+  #keypad{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  #keypad .key{font-family:inherit; font-weight:800; font-size:24px; padding:14px; border:none; border-radius:16px; background:#f0ecff; color:var(--ink); cursor:pointer; box-shadow:0 3px 0 rgba(0,0,0,.08);}
+  #keypad .key:active{transform:translateY(2px);}
+  #keypad .key.blank{background:transparent; box-shadow:none; pointer-events:none;}
+  .tpTitle{font-weight:800; font-size:18px; margin-bottom:12px; color:var(--ink);}
+  .tpBtns{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
+  .tpBtns button{font-family:inherit; font-weight:800; font-size:16px; padding:14px; border:none; border-radius:16px; background:var(--gold); color:#5b3d00; cursor:pointer; box-shadow:0 4px 0 rgba(0,0,0,.12);}
+  .tpBtns button:active{transform:translateY(2px);}
+
   .confetti{position:fixed; top:-24px; z-index:60; pointer-events:none; animation:fall linear forwards;}
   .confetti svg{width:30px; height:30px;}
   @keyframes fall{to{transform:translateY(108vh) rotate(400deg); opacity:.85;}}
@@ -148,6 +164,7 @@
     <button id="mExplore">🗺️ Explorar</button>
   </div>
   <div class="right">
+    <div id="timeChip" class="stars" style="display:none">⏱ 0:00</div>
     <div class="stars">⭐ <span id="starCount">0</span></div>
     <button class="gear" id="gearBtn" title="Vozes">⚙️</button>
   </div>
@@ -195,6 +212,24 @@
 </footer>
 
 <div id="cheer"></div>
+
+<!-- Parental lock + time limit -->
+<div id="lock">
+  <div class="lockcard">
+    <div class="lockemoji">🔒</div>
+    <div id="lockTitle">Peça a um adulto</div>
+    <div id="lockSub">Digite o código</div>
+    <div id="lockDots">○○○○</div>
+    <div id="keypad"></div>
+    <div id="timePick" style="display:none">
+      <div class="tpTitle">Por quanto tempo? ⏱️</div>
+      <div class="tpBtns">
+        <button data-min="5">5 min</button><button data-min="10">10 min</button><button data-min="15">15 min</button>
+        <button data-min="20">20 min</button><button data-min="30">30 min</button><button data-min="0">Sem limite</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Start -->
 <div class="overlay" id="overlay">
@@ -557,6 +592,45 @@ Object.assign(ACT, {
   a_clap: S(`<circle cx="60" cy="30" r="11" fill="#f2c79a"/><path d="M60 40 L60 68" stroke="#ff7ac6" stroke-width="11" stroke-linecap="round"/><path d="M60 66 L52 88 M60 66 L68 88" stroke="#4a68c0" stroke-width="8" stroke-linecap="round"/><g><path d="M60 50 L44 54" stroke="#f2c79a" stroke-width="6" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="0 60 50;24 60 50;0 60 50" dur="0.4s" repeatCount="indefinite"/></g><g><path d="M60 50 L76 54" stroke="#f2c79a" stroke-width="6" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="0 60 50;-24 60 50;0 60 50" dur="0.4s" repeatCount="indefinite"/></g>`, "#ffeaf5"),
 });
 
+/* ---- more vocabulary (round 2) ---- */
+Object.assign(ART, {
+  tiger: S('<g stroke-linejoin="round"><path d="M34 40 L28 28 L44 38Z" fill="#e8862a"/><path d="M86 40 L92 28 L76 38Z" fill="#e8862a"/><circle cx="60" cy="60" r="32" fill="#ff9f43"/><path d="M44 40 v13 M60 36 v14 M76 40 v13" stroke="#3a2a1a" stroke-width="4" stroke-linecap="round"/><ellipse cx="60" cy="74" rx="18" ry="13" fill="#fff"/><circle cx="50" cy="56" r="3.4" fill="#2a1a0c"/><circle cx="70" cy="56" r="3.4" fill="#2a1a0c"/><path d="M56 70 L64 70 L60 76 Z" fill="#c0392b"/></g>',"#fff2e0"),
+  giraffe: S('<g stroke-linejoin="round"><rect x="52" y="60" width="16" height="44" rx="6" fill="#ffce6a"/><circle cx="46" cy="38" r="4" fill="#8a5a34"/><circle cx="74" cy="38" r="4" fill="#8a5a34"/><rect x="44" y="38" width="4" height="10" fill="#8a5a34"/><rect x="72" y="38" width="4" height="10" fill="#8a5a34"/><ellipse cx="60" cy="56" rx="20" ry="18" fill="#ffce6a"/><ellipse cx="60" cy="66" rx="12" ry="10" fill="#ffe0a0"/><circle cx="53" cy="52" r="3" fill="#2a1a0c"/><circle cx="67" cy="52" r="3" fill="#2a1a0c"/><circle cx="56" cy="86" r="4" fill="#c8964a"/><circle cx="64" cy="94" r="4" fill="#c8964a"/></g>',"#fff8e0"),
+  panda: S('<g stroke-linejoin="round"><circle cx="40" cy="38" r="11" fill="#2a2a2a"/><circle cx="80" cy="38" r="11" fill="#2a2a2a"/><circle cx="60" cy="62" r="32" fill="#fff"/><ellipse cx="48" cy="58" rx="8" ry="11" fill="#2a2a2a"/><ellipse cx="72" cy="58" rx="8" ry="11" fill="#2a2a2a"/><circle cx="48" cy="58" r="3" fill="#fff"/><circle cx="72" cy="58" r="3" fill="#fff"/><ellipse cx="60" cy="72" rx="5" ry="3.5" fill="#2a2a2a"/></g>',"#eef0f2"),
+  koala: S('<g stroke-linejoin="round"><circle cx="34" cy="44" r="15" fill="#9aa6b4"/><circle cx="86" cy="44" r="15" fill="#9aa6b4"/><circle cx="34" cy="44" r="8" fill="#c3ccd6"/><circle cx="86" cy="44" r="8" fill="#c3ccd6"/><circle cx="60" cy="62" r="28" fill="#9aa6b4"/><ellipse cx="60" cy="70" rx="10" ry="13" fill="#5a5a66"/><circle cx="50" cy="56" r="3" fill="#2a2a2a"/><circle cx="70" cy="56" r="3" fill="#2a2a2a"/></g>',"#eef1f6"),
+  hippo: S('<g stroke-linejoin="round"><circle cx="42" cy="42" r="7" fill="#a08fb0"/><circle cx="78" cy="42" r="7" fill="#a08fb0"/><ellipse cx="60" cy="66" rx="34" ry="28" fill="#b3a0c4"/><ellipse cx="60" cy="80" rx="24" ry="16" fill="#c4b3d4"/><ellipse cx="50" cy="80" rx="4" ry="5" fill="#7a6a8a"/><ellipse cx="70" cy="80" rx="4" ry="5" fill="#7a6a8a"/><circle cx="48" cy="52" r="3.4" fill="#2a2a2a"/><circle cx="72" cy="52" r="3.4" fill="#2a2a2a"/></g>',"#f0ecf6"),
+  turtle: S('<g stroke-linejoin="round"><ellipse cx="58" cy="66" rx="34" ry="24" fill="#3fbf5f"/><path d="M58 44 v44 M34 66 h44 M44 50 l28 32 M72 50 l-28 32" stroke="#2f8f47" stroke-width="3"/><circle cx="96" cy="60" r="9" fill="#5cc46a"/><circle cx="98" cy="58" r="1.8" fill="#2a2a2a"/><ellipse cx="34" cy="86" rx="7" ry="5" fill="#5cc46a"/><ellipse cx="82" cy="86" rx="7" ry="5" fill="#5cc46a"/></g>',"#e6f7e8"),
+  bee: S('<g stroke-linejoin="round"><ellipse cx="60" cy="64" rx="26" ry="20" fill="#ffd23f"/><path d="M52 48 v32 M64 46 v36 M76 52 v22" stroke="#2a2a2a" stroke-width="5"/><ellipse cx="44" cy="48" rx="12" ry="8" fill="#dff1ff" opacity="0.85"/><ellipse cx="76" cy="48" rx="12" ry="8" fill="#dff1ff" opacity="0.85"/><circle cx="38" cy="60" r="9" fill="#2a2a2a"/><circle cx="35" cy="58" r="2" fill="#fff"/></g>',"#fff8d6"),
+  ladybug: S('<g stroke-linejoin="round"><circle cx="60" cy="62" r="30" fill="#ff4d5e"/><path d="M60 32 V92" stroke="#2a2a2a" stroke-width="3"/><circle cx="60" cy="38" r="10" fill="#2a2a2a"/><g fill="#2a2a2a"><circle cx="46" cy="56" r="4"/><circle cx="74" cy="56" r="4"/><circle cx="48" cy="74" r="4"/><circle cx="72" cy="74" r="4"/></g></g>',"#ffe4e6"),
+  dolphin: S('<path d="M20 74 Q30 50 60 48 Q84 46 96 34 Q92 52 78 60 Q90 66 92 80 Q78 70 66 74 Q44 84 20 74Z" fill="#4fc3f7"/><circle cx="46" cy="60" r="2.6" fill="#1c2b3a"/>',"#e6f6fe"),
+  whale: S('<g stroke-linejoin="round"><path d="M22 66 Q22 44 56 44 Q86 44 90 62 Q92 78 74 82 L30 82 Q22 78 22 66Z" fill="#4a90d9"/><path d="M90 62 L104 52 L102 70 Z" fill="#4a90d9"/><ellipse cx="52" cy="76" rx="24" ry="8" fill="#bfe0f5"/><circle cx="42" cy="60" r="3" fill="#1c2b3a"/><path d="M40 44 q-2 -10 4 -12 q2 8 -2 12" fill="#8fd0f5"/></g>',"#e6f2fc"),
+  crab: S('<g stroke-linejoin="round"><ellipse cx="60" cy="64" rx="28" ry="20" fill="#ff5d4d"/><circle cx="50" cy="52" r="4" fill="#fff"/><circle cx="70" cy="52" r="4" fill="#fff"/><circle cx="50" cy="52" r="2" fill="#2a2a2a"/><circle cx="70" cy="52" r="2" fill="#2a2a2a"/><path d="M32 60 q-14 -6 -18 4 q10 2 12 8" fill="#ff5d4d"/><path d="M88 60 q14 -6 18 4 q-10 2 -12 8" fill="#ff5d4d"/><path d="M36 78 l-10 8 M50 84 l-4 10 M70 84 l4 10 M84 78 l10 8" stroke="#e04030" stroke-width="4" stroke-linecap="round"/></g>',"#ffe6e2"),
+  chicken: S('<g stroke-linejoin="round"><ellipse cx="62" cy="70" rx="26" ry="22" fill="#fff" stroke="#eee" stroke-width="1"/><circle cx="46" cy="50" r="15" fill="#fff"/><path d="M40 38 q4 -8 8 0 q4 -8 8 0 q-2 6 -8 6 q-6 0 -8 -6z" fill="#ff4d5e"/><path d="M34 52 L22 56 L34 60 Z" fill="#ff9f2e"/><circle cx="44" cy="48" r="2.6" fill="#2a2a2a"/><path d="M84 84 l6 8 M76 88 l3 8" stroke="#ff9f2e" stroke-width="4" stroke-linecap="round"/></g>',"#fff8f0"),
+  watermelon: S('<path d="M20 40 Q60 104 100 40 Z" fill="#3fbf5f"/><path d="M26 42 Q60 94 94 42 Z" fill="#fff"/><path d="M30 44 Q60 86 90 44 Z" fill="#ff5d6c"/><g fill="#2a2a2a"><ellipse cx="50" cy="56" rx="2" ry="3"/><ellipse cx="70" cy="56" rx="2" ry="3"/><ellipse cx="60" cy="68" rx="2" ry="3"/><ellipse cx="44" cy="50" rx="2" ry="3"/><ellipse cx="76" cy="50" rx="2" ry="3"/></g>',"#eafaef"),
+  pear: S('<path d="M60 30 q-6 6 -4 14 q-18 6 -16 30 q2 20 20 20 q18 0 20 -20 q2 -24 -16 -30 q-2 -8 -4 -14z" fill="#9acd32"/><rect x="58" y="22" width="3" height="12" rx="1" fill="#7a4a22"/><path d="M61 26 q8 -4 10 2 q-8 2 -10 -2z" fill="#5cc46a"/>',"#f2f8e0"),
+  cherry: S('<g><path d="M50 44 Q64 30 76 40" stroke="#4caf50" stroke-width="3" fill="none"/><circle cx="46" cy="72" r="14" fill="#ff2d55"/><circle cx="76" cy="76" r="14" fill="#e0243f"/><circle cx="42" cy="68" r="3" fill="#fff" opacity="0.7"/></g>',"#ffe4ea"),
+  lemon: S('<ellipse cx="60" cy="62" rx="30" ry="24" fill="#ffe23f" stroke="#e8c800" stroke-width="2"/><path d="M88 56 q6 -2 6 4" stroke="#7ab800" stroke-width="4" stroke-linecap="round" fill="none"/>',"#fffbe0"),
+  pineapple: S('<g stroke-linejoin="round"><path d="M60 30 q-10 -14 -2 -16 q4 8 2 14 q8 -12 8 -4 q-2 6 -6 8 q10 -8 8 0 q-4 8 -10 8z" fill="#4caf50"/><ellipse cx="60" cy="70" rx="24" ry="28" fill="#ffce3f"/><path d="M44 50 L76 90 M76 50 L44 90 M60 48 v44 M40 66 h40" stroke="#c8963c" stroke-width="2"/></g>',"#fff6d6"),
+  tomato: S('<circle cx="60" cy="64" r="30" fill="#ff3b30"/><path d="M60 36 q-10 -6 -14 0 q-6 -2 -6 4 q10 4 20 -4 q10 8 20 4 q0 -6 -6 -4 q-4 -6 -14 0z" fill="#4caf50"/><rect x="58" y="30" width="4" height="8" fill="#4caf50"/>',"#ffe4e0"),
+  corn: S('<g stroke-linejoin="round"><path d="M50 30 q-12 20 0 40 M70 30 q12 20 0 40" fill="#7ab800"/><ellipse cx="60" cy="66" rx="16" ry="30" fill="#ffd23f"/><g fill="#e8b000"><circle cx="54" cy="52" r="2"/><circle cx="66" cy="52" r="2"/><circle cx="54" cy="64" r="2"/><circle cx="66" cy="64" r="2"/><circle cx="60" cy="58" r="2"/><circle cx="60" cy="70" r="2"/><circle cx="54" cy="76" r="2"/><circle cx="66" cy="76" r="2"/></g></g>',"#fff8d6"),
+  hamburger: S('<g stroke-linejoin="round"><path d="M26 46 Q60 26 94 46 Q94 54 86 54 L34 54 Q26 54 26 46Z" fill="#e0a860"/><rect x="30" y="54" width="60" height="8" fill="#5cc46a"/><rect x="28" y="62" width="64" height="10" fill="#8a4a2a"/><rect x="32" y="72" width="56" height="6" fill="#ffce3f"/><path d="M30 78 Q60 92 90 78 Q90 84 84 84 L36 84 Q30 84 30 78Z" fill="#e0a860"/><g fill="#fff"><circle cx="44" cy="42" r="1.6"/><circle cx="60" cy="38" r="1.6"/><circle cx="76" cy="42" r="1.6"/></g></g>',"#fff3e0"),
+  donut: S('<g><circle cx="60" cy="62" r="30" fill="#e8b06a"/><path d="M60 32 a30 30 0 0 1 0 60 a30 30 0 0 1 0 -60" fill="#ff9ecb"/><circle cx="60" cy="62" r="11" fill="#fff2e0"/><g stroke-width="3" stroke-linecap="round"><path d="M46 44 l3 4" stroke="#4fc3f7"/><path d="M74 46 l-3 4" stroke="#ffd23f"/><path d="M48 78 l3 -4" stroke="#3fbf5f"/><path d="M72 78 l-3 -4" stroke="#8a6bff"/><path d="M60 38 v5" stroke="#ff5d6c"/></g></g>',"#ffe9f2"),
+  cupcake: S('<g stroke-linejoin="round"><path d="M38 66 L44 96 H76 L82 66Z" fill="#ffce6a"/><path d="M42 66 v30 M50 66 v30 M60 66 v30 M70 66 v30 M78 66 v30" stroke="#e8a800" stroke-width="1.5"/><path d="M36 66 Q36 44 60 44 Q84 44 84 66 Z" fill="#ff9ecb"/><circle cx="60" cy="40" r="5" fill="#ff3b30"/></g>',"#ffe9f2"),
+  helicopter: S('<g stroke-linejoin="round"><line x1="18" y1="38" x2="102" y2="38" stroke="#5a6b8a" stroke-width="4" stroke-linecap="round"/><rect x="58" y="38" width="4" height="12" fill="#5a6b8a"/><path d="M30 66 Q30 52 54 52 L86 52 L98 64 L98 72 L34 72 Q30 72 30 66Z" fill="#ff5d6c"/><circle cx="46" cy="62" r="8" fill="#bfe6ff"/><rect x="88" y="58" width="18" height="4" fill="#e04452"/></g>',"#eef2f7"),
+  firetruck: S('<g stroke-linejoin="round"><rect x="16" y="52" width="88" height="30" rx="4" fill="#e0243f"/><rect x="70" y="44" width="34" height="20" rx="3" fill="#ff4d5e"/><rect x="76" y="48" width="14" height="12" rx="2" fill="#bfe6ff"/><line x1="24" y1="50" x2="70" y2="40" stroke="#c0c6d0" stroke-width="4"/><circle cx="38" cy="86" r="9" fill="#2a2a3a"/><circle cx="84" cy="86" r="9" fill="#2a2a3a"/></g>',"#ffe4e6"),
+  ambulance: S('<g stroke-linejoin="round"><rect x="16" y="48" width="64" height="34" rx="4" fill="#fff" stroke="#dde3ea" stroke-width="2"/><path d="M80 56 L100 56 L104 72 L104 82 L80 82Z" fill="#eef2f7" stroke="#dde3ea" stroke-width="2"/><rect x="86" y="60" width="14" height="10" rx="2" fill="#bfe6ff"/><path d="M42 56 h8 v6 h6 v8 h-6 v6 h-8 v-6 h-6 v-8 h6z" fill="#ff4d5e"/><rect x="16" y="76" width="88" height="6" fill="#ff4d5e"/><circle cx="36" cy="86" r="9" fill="#2a2a3a"/><circle cx="86" cy="86" r="9" fill="#2a2a3a"/></g>',"#fff0f0"),
+  police: S('<g stroke-linejoin="round"><path d="M16 74 L28 54 L84 54 L100 74 Z" fill="#2a4a8a"/><path d="M37 54 L45 42 L72 42 L82 54Z" fill="#bfe6ff"/><rect x="14" y="70" width="90" height="12" rx="4" fill="#1c3a6a"/><rect x="52" y="34" width="16" height="8" rx="2" fill="#ff4d5e"/><rect x="60" y="34" width="8" height="8" fill="#4f6bd9"/><circle cx="36" cy="84" r="9" fill="#2a2a3a"/><circle cx="82" cy="84" r="9" fill="#2a2a3a"/></g>',"#eaf0fb"),
+  motorcycle: S('<g fill="none" stroke="#2a2a3a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="34" cy="74" r="16"/><circle cx="86" cy="74" r="16"/></g><path d="M34 74 L58 60 L78 60 L86 74" stroke="#ff5d6c" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M52 58 h16" stroke="#2a2a3a" stroke-width="4" stroke-linecap="round"/>',"#eef2f7"),
+  door: S('<g stroke-linejoin="round"><rect x="34" y="18" width="52" height="90" rx="4" fill="#c9a06a" stroke="#8a5a34" stroke-width="4"/><rect x="42" y="26" width="36" height="30" rx="3" fill="#b58a54"/><rect x="42" y="62" width="36" height="38" rx="3" fill="#b58a54"/><circle cx="78" cy="66" r="4" fill="#ffd23f"/></g>',"#f6ead9"),
+  key: S('<circle cx="44" cy="46" r="15" fill="none" stroke="#ffce3f" stroke-width="8"/><rect x="40" y="58" width="8" height="42" rx="3" fill="#ffce3f"/><rect x="48" y="82" width="12" height="6" fill="#ffce3f"/><rect x="48" y="92" width="10" height="6" fill="#ffce3f"/>',"#fff8d6"),
+  phone: S('<g stroke-linejoin="round"><rect x="40" y="20" width="40" height="80" rx="8" fill="#2a2a3a"/><rect x="44" y="30" width="32" height="56" rx="2" fill="#4fc3f7"/><circle cx="60" cy="93" r="3.5" fill="#5a5a6a"/></g>',"#eef2f7"),
+  bowl: S('<g stroke-linejoin="round"><path d="M26 58 H94 Q90 88 60 88 Q30 88 26 58Z" fill="#eef2f7" stroke="#cfd8e2" stroke-width="2"/><path d="M30 58 Q60 70 90 58" fill="#ff9f43"/><ellipse cx="60" cy="58" rx="34" ry="7" fill="#ffb04d"/></g>',"#fff4e6"),
+  glass: S('<path d="M42 34 H78 L74 96 Q60 100 46 96 Z" fill="#d9f0ff" stroke="#8fd0f5" stroke-width="2"/><path d="M45 58 H75 L72 94 Q60 98 48 94 Z" fill="#bfe6ff"/>',"#eef8ff"),
+  ocean: S('<g><path d="M14 84 q10 -10 22 0 t22 0 t22 0 t22 0" stroke="#4fc3f7" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M14 68 q10 -10 22 0 t22 0 t22 0 t22 0" stroke="#7ad0f7" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M70 44 q14 4 12 20 q-8 -8 -18 -4 q6 -12 6 -16z" fill="#bfe6ff"/></g>',"#e6f6fe"),
+  fire: S('<path d="M60 20 q14 18 6 34 q10 -4 8 -16 q14 14 8 34 q-6 20 -22 20 q-16 0 -22 -20 q-4 -14 6 -24 q2 8 8 8 q-8 -18 8 -36z" fill="#ff7a2e"/><path d="M60 46 q8 10 4 22 q-4 10 -14 8 q-8 -4 -6 -16 q2 8 8 6 q-4 -12 4 -20z" fill="#ffd23f"/>',"#fff0e0"),
+  leaf: S('<path d="M30 90 Q40 40 90 30 Q80 80 30 90Z" fill="#4caf50"/><path d="M30 90 Q56 64 90 30" stroke="#2f8f47" stroke-width="3" fill="none"/><path d="M50 68 l-10 -4 M62 56 l-10 -4 M74 44 l-10 -4" stroke="#2f8f47" stroke-width="2"/>',"#eafaef"),
+});
+
 /* ---- family-relationship figures (color-varied people) ---- */
 function pFig(cx, sex, age, hair, cloth){
   var skin="#f2c79a", s="";
@@ -670,33 +744,47 @@ const DECKS = {
     ["horse","Horse","Cavalo"],["cow","Cow","Vaca"],["pig","Pig","Porco"],["elephant","Elephant","Elefante"],
     ["monkey","Monkey","Macaco"],["duck","Duck","Pato"],["penguin","Penguin","Pinguim"],["owl","Owl","Coruja"],
     ["snake","Snake","Cobra"],["bear","Bear","Urso"],["zebra","Zebra","Zebra"],["capybara","Capybara","Capivara"],
+    ["tiger","Tiger","Tigre"],["giraffe","Giraffe","Girafa"],["panda","Panda","Panda"],["koala","Koala","Coala"],
+    ["hippo","Hippo","Hipopótamo"],["turtle","Turtle","Tartaruga"],["dolphin","Dolphin","Golfinho"],["whale","Whale","Baleia"],
+    ["crab","Crab","Caranguejo"],["chicken","Chicken","Galinha"],["bee","Bee","Abelha"],["ladybug","Ladybug","Joaninha"],
   ]},
   food:{ name:"🍎 Comida", words:[
     ["apple","Apple","Maçã"],["banana","Banana","Banana"],["strawberry","Strawberry","Morango"],["orange","Orange","Laranja"],
     ["grapes","Grapes","Uvas"],["carrot","Carrot","Cenoura"],["bread","Bread","Pão"],["cheese","Cheese","Queijo"],
     ["egg","Egg","Ovo"],["milk","Milk","Leite"],["water","Water","Água"],["juice","Juice","Suco"],
     ["cookie","Cookie","Biscoito"],["cake","Cake","Bolo"],["pizza","Pizza","Pizza"],["icecream","Ice cream","Sorvete"],["popcorn","Popcorn","Pipoca"],
+    ["watermelon","Watermelon","Melancia"],["pear","Pear","Pera"],["cherry","Cherry","Cereja"],["lemon","Lemon","Limão"],
+    ["pineapple","Pineapple","Abacaxi"],["tomato","Tomato","Tomate"],["corn","Corn","Milho"],["hamburger","Hamburger","Hambúrguer"],
+    ["donut","Donut","Rosquinha"],["cupcake","Cupcake","Cupcake"],
   ]},
   transporte:{ name:"🚗 Transporte", words:[
     ["car","Car","Carro"],["bus","Bus","Ônibus"],["truck","Truck","Caminhão"],["bike","Bike","Bicicleta"],
     ["train","Train","Trem"],["boat","Boat","Barco"],["airplane","Airplane","Avião"],["van","Van","Van"],["rocket","Rocket","Foguete"],
+    ["helicopter","Helicopter","Helicóptero"],["firetruck","Fire truck","Caminhão de bombeiro"],["ambulance","Ambulance","Ambulância"],
+    ["police","Police car","Carro de polícia"],["motorcycle","Motorcycle","Moto"],
   ]},
   casa:{ name:"🏠 Casa", words:[
     ["bed","Bed","Cama"],["table","Table","Mesa"],["chair","Chair","Cadeira"],["sofa","Sofa","Sofá"],
     ["tv","TV","Televisão"],["lamp","Lamp","Luminária"],["clock","Clock","Relógio"],["book","Book","Livro"],
     ["window","Window","Janela"],["fridge","Fridge","Geladeira"],["cup","Cup","Copo"],["plate","Plate","Prato"],
     ["mirror","Mirror","Espelho"],["plant","Plant","Planta"],
+    ["door","Door","Porta"],["key","Key","Chave"],["phone","Phone","Telefone"],["bowl","Bowl","Tigela"],["glass","Glass","Copo"],
   ]},
   world:{ name:"☀️ Mundo", words:[
     ["sun","Sun","Sol"],["moon","Moon","Lua"],["star","Star","Estrela"],["cloud","Cloud","Nuvem"],["rainbow","Rainbow","Arco-íris"],
     ["rain","Rain","Chuva"],["snow","Snow","Neve"],["flower","Flower","Flor"],["tree","Tree","Árvore"],["mountain","Mountain","Montanha"],
-    ["heart","Heart","Coração"],["butterfly","Butterfly","Borboleta"],
+    ["heart","Heart","Coração"],["butterfly","Butterfly","Borboleta"],["ocean","Ocean","Mar"],["fire","Fire","Fogo"],["leaf","Leaf","Folha"],
   ]},
   colors:{ name:"🌈 Cores", words:[
     ["c_red","Red","Vermelho","#ff4d5e"],["c_blue","Blue","Azul","#3a7bd5"],["c_green","Green","Verde","#3fbf5f"],
     ["c_yellow","Yellow","Amarelo","#ffd23f"],["c_pink","Pink","Rosa","#ff7ac6"],["c_purple","Purple","Roxo","#8a6bff"],
     ["c_orange","Orange","Laranja","#ff9f43"],["c_brown","Brown","Marrom","#9c6b3f"],["c_gray","Gray","Cinza","#9aa3b0"],
     ["c_white","White","Branco","#ffffff"],["c_black","Black","Preto","#2f2f3a"],
+    ["c_lightblue","Light blue","Azul claro","#8fd0f5"],["c_darkblue","Dark blue","Azul escuro","#1c3a8a"],
+    ["c_teal","Teal","Verde-azulado","#1aa6a6"],["c_lime","Lime","Verde-limão","#a4e132"],
+    ["c_gold","Gold","Dourado","#e8b800"],["c_beige","Beige","Bege","#e8d9b0"],
+    ["c_turquoise","Turquoise","Turquesa","#40e0d0"],["c_magenta","Magenta","Magenta","#e0218a"],
+    ["c_peach","Peach","Pêssego","#ffb98a"],["c_maroon","Maroon","Bordô","#7a1f2b"],["c_silver","Silver","Prata","#c0c6ce"],
   ]},
   numbers:{ name:"🔢 Números", words:[
     ["n1","One","Um"],["n2","Two","Dois"],["n3","Three","Três"],["n4","Four","Quatro"],["n5","Five","Cinco"],
@@ -734,6 +822,20 @@ const DECKS = {
     ["L_y","Y","Yo-yo","Ioiô","yoyo"],["L_z","Z","Zebra","Zebra","zebra"],
   ]},
 };
+
+/* numbers 1-50 + 60..100, generated with EN + PT names */
+(function(){
+  var enU=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine"];
+  var enT=["","Ten","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+  var enTeen=["Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+  var ptU=["","Um","Dois","Três","Quatro","Cinco","Seis","Sete","Oito","Nove"];
+  var ptT=["","Dez","Vinte","Trinta","Quarenta","Cinquenta","Sessenta","Setenta","Oitenta","Noventa"];
+  var ptTeen=["Dez","Onze","Doze","Treze","Quatorze","Quinze","Dezesseis","Dezessete","Dezoito","Dezenove"];
+  function en(n){ if(n===100)return"One hundred"; if(n<10)return enU[n]; if(n<20)return enTeen[n-10]; var t=Math.floor(n/10),u=n%10; return u?enT[t]+"-"+enU[u].toLowerCase():enT[t]; }
+  function pt(n){ if(n===100)return"Cem"; if(n<10)return ptU[n]; if(n<20)return ptTeen[n-10]; var t=Math.floor(n/10),u=n%10; return u?ptT[t]+" e "+ptU[u].toLowerCase():ptT[t]; }
+  var w=[]; for(var n=1;n<=50;n++) w.push(["n"+n,en(n),pt(n)]); [60,70,80,90,100].forEach(function(n){ w.push(["n"+n,en(n),pt(n)]); });
+  DECKS.numbers.words=w;
+})();
 
 /* resolve art for a word entry */
 function artFor(w){
@@ -1037,7 +1139,7 @@ document.getElementById("ptTest").onclick=()=>speak("Oi! Eu falo português.",pt
 document.getElementById("enTest").onclick=()=>speak("Hi! I speak English.",enVoiceObj,"en-US");
 document.getElementById("rate").oninput=e=>{rate=parseFloat(e.target.value); saveProg();};
 document.getElementById("startBtn").onclick=()=>{ document.getElementById("overlay").style.display="none";
-  speak(" ",enVoiceObj,"en-US"); loadVoices(); setMode("learn"); };
+  started=true; startTimer(pendingMin); speak(" ",enVoiceObj,"en-US"); loadVoices(); setMode("learn"); };
 
 document.getElementById("floatArt").innerHTML = PHOTOS.girl ? photoSVG(PHOTOS.girl) : ART.unicorn;
 if(KID && KID.indexOf("KIDNAME")<0){ document.querySelector(".overlay h1").textContent = "Oi, "+KID+"! 🦄"; }
@@ -1092,6 +1194,26 @@ function choose(el,w){ if(roundLock) return;
   } else { el.classList.add("wrong"); speak("Tenta de novo",ptVoiceObj,"pt-BR"); setTimeout(function(){ el.classList.remove("wrong"); },450); }
 }
 function levelUp(){ confetti(); photoCheer(); var pw=document.getElementById("promptWord"); if(pw) pw.textContent="🎉 Nível "+(level+1)+"!"; speak("Muito bem!",ptVoiceObj,"pt-BR"); level++; saveProg(); setTimeout(startLevel,2200); }
+
+/* ============ Parental lock + time limit ============ */
+var CODE="2200", codeEntry="", started=false, pendingMin=10, timerEnd=0, timerInt=null;
+function buildKeypad(){ var kp=document.getElementById("keypad"); kp.innerHTML="";
+  ["1","2","3","4","5","6","7","8","9","","0","⌫"].forEach(function(k){ var b=document.createElement("button");
+    b.className="key"+(k===""?" blank":""); b.textContent=k; if(k!=="") b.onclick=function(){ keyPress(k); }; kp.appendChild(b); }); }
+function updateDots(){ var s=""; for(var i=0;i<4;i++) s+= i<codeEntry.length?"●":"○"; document.getElementById("lockDots").textContent=s; }
+function keyPress(k){ if(k==="⌫"){ codeEntry=codeEntry.slice(0,-1); } else if(codeEntry.length<4){ codeEntry+=k; } updateDots();
+  if(codeEntry.length===4){ if(codeEntry===CODE){ codeEntry=""; showTimePick(); }
+    else { var lc=document.querySelector(".lockcard"); lc.classList.add("shake"); setTimeout(function(){ lc.classList.remove("shake"); },420); codeEntry=""; updateDots(); document.getElementById("lockSub").textContent="Código errado — tente de novo"; } } }
+function showTimePick(){ document.getElementById("keypad").style.display="none"; document.getElementById("lockDots").style.display="none"; document.getElementById("lockSub").style.display="none"; document.getElementById("lockTitle").textContent="Pronto! Escolha o tempo"; document.getElementById("timePick").style.display="block"; }
+function resetLockUI(){ codeEntry=""; document.getElementById("keypad").style.display="grid"; document.getElementById("lockDots").style.display="block"; document.getElementById("lockSub").style.display="block"; document.getElementById("lockSub").textContent="Digite o código"; document.getElementById("lockTitle").textContent="Peça a um adulto"; document.getElementById("timePick").style.display="none"; updateDots(); }
+function showLock(){ resetLockUI(); document.getElementById("lock").style.display="flex"; try{ synth.cancel(); }catch(e){} }
+function pickTime(min){ pendingMin=min; document.getElementById("lock").style.display="none"; if(!started){ document.getElementById("overlay").style.display="flex"; } else { startTimer(min); } }
+function startTimer(min){ if(timerInt) clearInterval(timerInt); timerEnd=(min===0)?Infinity:(Date.now()+min*60000); tickTimer(); if(min!==0) timerInt=setInterval(tickTimer,1000); else { var c=document.getElementById("timeChip"); if(c) c.style.display="none"; } }
+function tickTimer(){ var c=document.getElementById("timeChip"); if(timerEnd===Infinity){ if(c) c.style.display="none"; return; } var rem=timerEnd-Date.now(); if(rem<=0){ if(timerInt) clearInterval(timerInt); if(c) c.style.display="none"; showLock(); document.getElementById("lockSub").textContent="Tempo esgotado! Digite o código"; return; } if(c){ c.style.display="flex"; var s=Math.ceil(rem/1000); c.textContent="⏱ "+Math.floor(s/60)+":"+("0"+(s%60)).slice(-2); } }
+buildKeypad();
+Array.prototype.forEach.call(document.querySelectorAll("#timePick .tpBtns button"), function(b){ b.onclick=function(){ pickTime(parseInt(b.getAttribute("data-min"),10)); }; });
+document.getElementById("overlay").style.display="none";
+showLock();
 </script>
 </body>
 </html>
