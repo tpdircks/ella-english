@@ -89,6 +89,13 @@
   .shelf{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; min-height:40px; max-width:96vw;}
   .shelf svg{width:34px; height:34px;}
 
+  /* ---- JOGAR board (Jornada Mágica) ---- */
+  .jlevel{background:var(--gold); color:#5b3d00; font-weight:800; border-radius:12px; padding:6px 12px; font-size:clamp(12px,3.4vw,16px); white-space:nowrap;}
+  #board{position:relative; width:100%; aspect-ratio:320/180; border-radius:22px; overflow:hidden; background:linear-gradient(160deg,#a98bff,#ff9ed6); box-shadow:0 12px 30px rgba(0,0,0,.24);}
+  #board>svg{position:absolute; inset:0; width:100%; height:100%; display:block;}
+  #token{position:absolute; width:14%; aspect-ratio:1; transform:translate(-50%,-50%); transition:left .55s cubic-bezier(.3,1.5,.5,1), top .55s cubic-bezier(.3,1.5,.5,1); z-index:2; filter:drop-shadow(0 3px 5px rgba(0,0,0,.35));}
+  #token>svg{width:100%; height:100%; border-radius:50%;}
+
   /* ---- EXPLORE ---- */
   #explore{display:none; flex-direction:column; align-items:center; width:min(680px,96vw); height:100%; justify-content:flex-start; gap:10px; padding-top:2px;}
   #placeCats{width:100%;}
@@ -173,9 +180,10 @@
     <div class="prompt">
       <button class="spk" id="gameSpk">🔊</button>
       <div class="big" id="promptWord">?</div>
+      <div id="jLevel" class="jlevel">Nível 1</div>
     </div>
+    <div id="board"></div>
     <div class="choices" id="choices"></div>
-    <div class="shelf" id="shelf"></div>
   </div>
 </main>
 
@@ -803,7 +811,7 @@ function renderLearn(auto){
 }
 function buildCats(){ const c=document.getElementById("cats"); c.innerHTML="";
   Object.keys(DECKS).forEach(k=>{const b=document.createElement("button");b.className="chip"+(k===deckKey?" active":"");
-    b.textContent=DECKS[k].name; b.onclick=()=>{deckKey=k;idx=0;buildCats(); mode==="learn"?renderLearn():newRound();}; c.appendChild(b);});
+    b.textContent=DECKS[k].name; b.onclick=()=>{deckKey=k;idx=0;buildCats(); mode==="learn"?renderLearn():startJourney();}; c.appendChild(b);});
 }
 
 /* =====================================================================
@@ -938,7 +946,7 @@ let exploreIdx=0, exploreFound=new Set();
 function buildPlaceCats(){
   const c=document.getElementById("placeCats"); c.innerHTML="";
   SCENES.forEach((s,i)=>{ const b=document.createElement("button"); b.className="chip"+(i===exploreIdx?" active":"");
-    b.textContent=s.chip; b.onclick=()=>{ exploreIdx=i; buildPlaceCats(); loadScene(); }; c.appendChild(b); });
+    b.textContent=s.chip; b.onclick=()=>{ exploreIdx=i; buildPlaceCats(); loadScene(); }; c.appendChild(b); }); /* place chips */
 }
 function openExplore(){ buildPlaceCats(); loadScene(); }
 function loadScene(){
@@ -979,8 +987,8 @@ function setMode(m){ mode=m;
   document.getElementById("game").style.display = m==="play"?"flex":"none";
   document.getElementById("explore").style.display = m==="explore"?"flex":"none";
   document.getElementById("learnControls").style.display = m==="learn"?"flex":"none";
-  document.getElementById("cats").style.display = m==="explore"?"none":"flex";
-  if(m==="learn") renderLearn(); else if(m==="play") newRound(); else openExplore();
+  document.getElementById("cats").style.display = (m==="learn")?"flex":"none";
+  if(m==="learn") renderLearn(); else if(m==="play") startJourney(); else openExplore();
 }
 function confetti(){ const chars=["star","heart","rainbow","unicorn"];
   for(let i=0;i<16;i++){ const s=document.createElement("div"); s.className="confetti";
@@ -1025,6 +1033,54 @@ document.getElementById("startBtn").onclick=()=>{ document.getElementById("overl
 document.getElementById("floatArt").innerHTML = PHOTOS.girl ? photoSVG(PHOTOS.girl) : ART.unicorn;
 if(KID && KID.indexOf("KIDNAME")<0){ document.querySelector(".overlay h1").textContent = "Oi, "+KID+"! 🦄"; }
 buildCats();
+
+/* ============ JOGAR — Jornada Mágica (board + levels) ============ */
+var level=1, tileCount=6, tilePos=0, jChoices=3, gamePool=[];
+function buildGamePool(){ var ks=["favorites","animals","food","transporte","casa","world","colors","numbers","actions"]; gamePool=[]; ks.forEach(function(k){ if(DECKS[k]) DECKS[k].words.forEach(function(w){ gamePool.push(w); }); }); }
+function jShuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function startJourney(){ level=1; buildGamePool(); startLevel(); }
+function startLevel(){ tileCount=Math.min(10,5+level); jChoices=level>=3?4:3; tilePos=0; renderBoard(); var jl=document.getElementById("jLevel"); if(jl) jl.textContent="Nível "+level; newRound(); }
+function tilePositions(){ var n=tileCount, per=5, rows=Math.ceil(n/per), pos=[]; for(var i=0;i<n;i++){ var row=Math.floor(i/per), col=i%per; if(row%2===1) col=per-1-col; var x=32+col*64, y=rows>1?(38+row*((148-38)/(rows-1))):92; pos.push({x:x,y:y}); } return pos; }
+function castleAt(cx,cy){ return '<g transform="translate('+(cx-17)+','+(cy-22)+')">'
+  +'<rect x="14" y="1" width="6" height="10" fill="#7a4a22"/><path d="M20 1 l9 3 l-9 3 Z" fill="#ff5d6c"/>'
+  +'<rect x="2" y="14" width="30" height="22" rx="2" fill="#c9a0e0"/>'
+  +'<rect x="0" y="9" width="9" height="27" fill="#b388d9"/><rect x="25" y="9" width="9" height="27" fill="#b388d9"/>'
+  +'<path d="M0 9 l4.5 -6 l4.5 6 Z" fill="#ffd23f"/><path d="M25 9 l4.5 -6 l4.5 6 Z" fill="#ffd23f"/>'
+  +'<rect x="13" y="24" width="8" height="12" rx="2" fill="#7a4a22"/></g>'; }
+function renderBoard(){ var pos=tilePositions();
+  var s='<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">';
+  s+='<g fill="#ffffff" opacity="0.45"><ellipse cx="56" cy="26" rx="22" ry="9"/><ellipse cx="266" cy="150" rx="24" ry="10"/></g>';
+  s+='<g fill="#fff6b8"><circle cx="300" cy="26" r="3"/><circle cx="18" cy="150" r="3"/><circle cx="150" cy="16" r="2.4"/><circle cx="292" cy="96" r="2.4"/></g>';
+  var d='M'+pos[0].x+' '+pos[0].y; for(var i=1;i<pos.length;i++){ d+=' L'+pos[i].x+' '+pos[i].y; }
+  s+='<path d="'+d+'" fill="none" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>';
+  var cols=["#ff5d6c","#ff9f43","#ffd23f","#3fbf5f","#4fc3f7","#8a6bff","#ff7ac6"];
+  for(var i=0;i<pos.length;i++){ var p=pos[i];
+    if(i===pos.length-1){ s+=castleAt(p.x,p.y); }
+    else { s+='<circle cx="'+p.x+'" cy="'+p.y+'" r="11" fill="'+cols[i%cols.length]+'" stroke="#fff" stroke-width="3"/>'; if(i===0){ s+='<circle cx="'+p.x+'" cy="'+p.y+'" r="4.5" fill="#fff"/>'; } }
+  }
+  s+='</svg>';
+  var t=pos[tilePos];
+  s+='<div id="token" style="left:'+(t.x/320*100)+'%;top:'+(t.y/180*100)+'%">'+(PHOTOS.girl?photoSVG(PHOTOS.girl):ART.unicorn)+'</div>';
+  document.getElementById("board").innerHTML=s;
+}
+function moveToken(){ var pos=tilePositions(), t=pos[tilePos], el=document.getElementById("token"); if(el){ el.style.left=(t.x/320*100)+'%'; el.style.top=(t.y/180*100)+'%'; } }
+function newRound(){ roundLock=false; if(!gamePool.length) buildGamePool();
+  var t=gamePool[Math.floor(Math.random()*gamePool.length)]; target=t;
+  var others=gamePool.filter(function(w){ return w[1]!==t[1]; }); jShuffle(others);
+  var set=[t]; for(var i=0;i<jChoices-1;i++){ if(others[i]) set.push(others[i]); } jShuffle(set);
+  document.getElementById("promptWord").textContent=t[1];
+  var box=document.getElementById("choices"); box.innerHTML="";
+  set.forEach(function(w){ var el=document.createElement("div"); el.className="choice"; el.innerHTML=artFor(w); el.onclick=function(){ choose(el,w); }; box.appendChild(el); });
+  setTimeout(promptSpeak,320);
+}
+function promptSpeak(){ if(!target) return; synth.cancel(); speak("Ache: "+target[2],ptVoiceObj,"pt-BR",function(){ setTimeout(function(){ speak(target[1],enVoiceObj,"en-US"); },250); }); }
+function choose(el,w){ if(roundLock) return;
+  if(w===target){ roundLock=true; el.classList.add("right"); stars++; document.getElementById("starCount").textContent=stars;
+    tilePos++; moveToken(); confetti(); synth.cancel(); speak("Yes!",enVoiceObj,"en-US",function(){ speak(target[1],enVoiceObj,"en-US"); });
+    if(tilePos>=tileCount-1){ setTimeout(levelUp,1200); } else { setTimeout(newRound,1300); }
+  } else { el.classList.add("wrong"); speak("Tenta de novo",ptVoiceObj,"pt-BR"); setTimeout(function(){ el.classList.remove("wrong"); },450); }
+}
+function levelUp(){ confetti(); photoCheer(); var pw=document.getElementById("promptWord"); if(pw) pw.textContent="🎉 Nível "+(level+1)+"!"; speak("Muito bem!",ptVoiceObj,"pt-BR"); level++; setTimeout(startLevel,2200); }
 </script>
 </body>
 </html>
